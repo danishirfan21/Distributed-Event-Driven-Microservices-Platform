@@ -1,0 +1,23 @@
+# Binaries
+bin/
+main
+server
+
+# Dependencies
+vendor/
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Docker
+.docker/
+
+# Environment
+.env
+
+# Testing
+coverage.out
