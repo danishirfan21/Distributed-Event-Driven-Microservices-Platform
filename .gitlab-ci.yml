@@ -1,0 +1,60 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_REGISTRY: my-registry.com
+
+.build_template: &build_definition
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $DOCKER_REGISTRY/$SERVICE_NAME:$CI_COMMIT_SHA -f services/$SERVICE_NAME/Dockerfile .
+    - docker push $DOCKER_REGISTRY/$SERVICE_NAME:$CI_COMMIT_SHA
+
+unit_tests:
+  stage: test
+  image: golang:1.25
+  script:
+    - go test ./...
+
+build_api_gateway:
+  <<: *build_definition
+  variables:
+    SERVICE_NAME: api-gateway
+
+build_user_service:
+  <<: *build_definition
+  variables:
+    SERVICE_NAME: user-service
+
+build_order_service:
+  <<: *build_definition
+  variables:
+    SERVICE_NAME: order-service
+
+build_payment_service:
+  <<: *build_definition
+  variables:
+    SERVICE_NAME: payment-service
+
+build_inventory_service:
+  <<: *build_definition
+  variables:
+    SERVICE_NAME: inventory-service
+
+build_notification_service:
+  <<: *build_definition
+  variables:
+    SERVICE_NAME: notification-service
+
+deploy_k8s:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  script:
+    - kubectl apply -f deployments/k8s/
+  only:
+    - main

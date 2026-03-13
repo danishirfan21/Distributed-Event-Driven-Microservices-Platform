@@ -1,0 +1,19 @@
+go 1.25.0
+
+use (
+	./pkg/common
+	./pkg/database
+	./pkg/events
+	./pkg/metrics
+	./pkg/tracing
+	./proto/inventory
+	./proto/order
+	./proto/payment
+	./proto/user
+	./services/api-gateway
+	./services/inventory-service
+	./services/notification-service
+	./services/order-service
+	./services/payment-service
+	./services/user-service
+)
